@@ -1,2 +1,3 @@
-# bendpr
-A slack bot that helps with PR review management.
+# Bendpr
+
+A slack bot to help you manage your github PR flow.
