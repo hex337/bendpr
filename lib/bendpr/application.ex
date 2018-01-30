@@ -6,14 +6,20 @@ defmodule Bendpr.Application do
   def start(_type, _args) do
     import Supervisor.Spec
 
+    slack_token = Application.get_env(:bendpr, Bendpr.Slack)[:token]
+
     # Define workers and child supervisors to be supervised
     children = [
       # Start the Ecto repository
-      supervisor(Bendpr.Repo, []),
+      #supervisor(Bendpr.Repo, []),
       # Start the endpoint when the application starts
       supervisor(BendprWeb.Endpoint, []),
       # Start your own worker by calling: Bendpr.Worker.start_link(arg1, arg2, arg3)
       # worker(Bendpr.Worker, [arg1, arg2, arg3]),
+      %{
+        id: Slack.Bot,
+        start: {Slack.Bot, :start_link, [Bendpr.SlackRtm, [], slack_token] }
+      }
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
