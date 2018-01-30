@@ -20,7 +20,7 @@ defmodule Bendpr.Mixfile do
   def application do
     [
       mod: {Bendpr.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :tentacat]
     ]
   end
 
@@ -38,7 +38,9 @@ defmodule Bendpr.Mixfile do
       {:phoenix_ecto, "~> 3.2"},
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
-      {:cowboy, "~> 1.0"}
+      {:cowboy, "~> 1.0"},
+      {:slack, "~> 0.12.0"},
+      {:tentacat, "~> 0.5"}
     ]
   end
 
