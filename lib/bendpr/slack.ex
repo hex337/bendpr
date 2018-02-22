@@ -18,10 +18,12 @@ defmodule Bendpr.SlackRtm do
       IO.puts "Someone is asking about open prs."
 
       client = Tentacat.Client.new(%{access_token: Application.get_env(:bendpr, Bendpr.Slack)[:github]})
-      pr_links = Tentacat.Pulls.filter "1debit", "server-core", %{state: "open"}, client
-                 |> Parser.parse_prs
-
+      open_prs = Tentacat.Pulls.filter "1debit", "server-core", %{state: "open"}, client
+      pr_links = Parser.parse_prs(open_prs)
       IO.puts inspect(pr_links, pretty: true)
+
+      prs_by_author = Enum.group_by(pr_links, &(&1.author.id))
+      IO.puts inspect(prs_by_author, pretty: true)
     end
 
     { :ok, state }
