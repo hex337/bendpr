@@ -1,4 +1,21 @@
 defmodule Bendpr.Parser do
+  def parse_graphql_prs(graphql_response) do
+    %{"data" => %{"user" => %{"pullRequests" => %{"edges" => prs}}}} = graphql_response
+    IO.puts inspect(prs, pretty: true)
+
+    prs
+    |> Enum.map(&extract_from_graphql/1)
+  end
+
+  def extract_from_graphql(input) do
+    url = extract(:url, input)
+    title = extract(:title, input)
+    head_repo = extract(:head_repo, input)
+    reviewers = []
+
+    construct_map(url, title, head_repo, reviewers)
+  end
+
   def parse_prs(prs) do
     prs
     |> Enum.map(&extract_and_construct/1)
@@ -14,40 +31,25 @@ defmodule Bendpr.Parser do
   end
 
   def extract(:url, input) do
-    %{"_links" => %{"html" => %{"href" => url}}} = input
+    %{"node" => %{"url" => url}} = input
     url
   end
 
   def extract(:title, input) do
-    %{"title" => title} = input
+    %{"node" => %{"title" => title}} = input
     title
   end
 
-  def extract(:author, input) do
-    %{"user" => user} = input
-    construct_user_map(user)
+  def extract(:head_repo, input) do
+    %{"node" => %{"headRepository" => %{"name" => head_repo}}} = input
+    head_repo
   end
 
-  def extract(:reviewers, input) do
-    %{"requested_reviewers" => revs} = input
-    Enum.map(revs, &construct_user_map/1)
-  end
-
-  def construct_user_map(user) do
-    %{"login" => username} = user
-    %{"id" => id} = user
-
-    %{
-      username: username,
-      id: id
-    }
-  end
-
-  defp construct_map(url, title, author, reviewers) do
+  defp construct_map(url, title, head_repo, reviewers) do
     %{
       url: url,
       title: title,
-      author: author,
+      head_repo: head_repo,
       reviewers: reviewers
     }
   end
