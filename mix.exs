@@ -40,8 +40,6 @@ defmodule Bendpr.Mixfile do
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
       {:slack, "~> 0.12.0"},
-      {:tentacat, "~> 0.9"},
-      {:neuron, "~> 0.5.1"},
       {:httpoison, "~> 1.0", override: true},
       {:json, "~> 1.0"}
     ]
